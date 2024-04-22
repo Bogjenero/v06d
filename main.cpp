@@ -1,21 +1,20 @@
 #include "main.h"
-#include <cmath>
+#include <numbers>
 #include "rc.h"
 
 
 
 COLORREF col(HWND par, COLORREF c) {
-	COLORREF myCol = RGB(255, 128, 0);
 	COLORREF custCols[16] = { 0 };
 	CHOOSECOLOR cc;
 	ZeroMemory(&cc, sizeof cc);
 	cc.lStructSize = sizeof cc;
 	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
 	cc.lpCustColors = custCols;
-	cc.rgbResult = myCol;
+	cc.rgbResult = c;
 	if (ChooseColor(&cc))
-		myCol = cc.rgbResult;
-	return myCol;
+		return cc.rgbResult;
+	return c;
 }
 
 int number_dialog::idd() const {
@@ -41,21 +40,20 @@ void main_window::on_paint(HDC hdc) {
 	int centerX = clientRect.right / 2;
 	int centerY = clientRect.bottom / 2;
 	int circleRadius = clientRect.bottom / 4;
-	double radius = min(centerX, centerY) - circleRadius;
 	brush b(color);
 	obj sb(hdc, b);
 	SetROP2(hdc, R2_NOTXORPEN);
 	
-	double angleIncrement = 360./ n;
+	double angleIncrement = 2 * std::numbers::pi / n;
 	
 	for (int i = 0; i < n; ++i) {
 		
-		int smallCircleCenterX = centerX + (clientRect.bottom / 4) * cos(i * angleIncrement * 3.14159265 / 180);
-		int smallCircleCenterY = (clientRect.bottom/2) - (clientRect.bottom / 4) * sin(i * angleIncrement * 3.14159265 / 180);
+		int smallCircleCenterX = centerX + (clientRect.bottom / 4) * cos(i * angleIncrement);
+		int smallCircleCenterY = (clientRect.bottom/2) - (clientRect.bottom / 4) * sin(i * angleIncrement);
 		
 
-		Ellipse(hdc, smallCircleCenterX - radius, smallCircleCenterY - radius,
-			smallCircleCenterX + radius, smallCircleCenterY + radius);
+		Ellipse(hdc, smallCircleCenterX - circleRadius, smallCircleCenterY - circleRadius,
+			smallCircleCenterX + circleRadius, smallCircleCenterY + circleRadius);
 	}
 	
 }
