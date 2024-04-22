@@ -10,6 +10,7 @@ COLORREF col(HWND par, COLORREF c) {
 	ZeroMemory(&cc, sizeof cc);
 	cc.lStructSize = sizeof cc;
 	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
+	cc.hwndOwner = par;
 	cc.lpCustColors = custCols;
 	cc.rgbResult = c;
 	if (ChooseColor(&cc))
